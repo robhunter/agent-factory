@@ -1,0 +1,11 @@
+# operational.yaml — the agent's self-authored operating knowledge.
+#
+# This is the "operational preferences / learnings" tier: durable lessons the
+# agent discovers about how to do its job well for this human. Unlike journals
+# and logs (local-only, see the data tier), this file lives in the committed +
+# pushed repo, so learnings are versioned and backed up to the remote.
+#
+# The agent appends to `learnings` as it discovers durable operating knowledge
+# (a numbered log, newest last). Not part of onboarding — it has no
+# `uninitialized` sentinel and starts empty.
+learnings: []

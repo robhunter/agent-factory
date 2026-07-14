@@ -1,0 +1,14 @@
+{
+  "name": "agent-factory",
+  "version": "0.1.0",
+  "description": "Fleet-aware generator for persistent autonomous agents on the agent-portal framework.",
+  "bin": {
+    "new-agent": "new-agent.js"
+  },
+  "scripts": {
+    "new-agent": "node new-agent.js",
+    "test": "node --test test/*.test.js && for f in test/*.test.sh; do bash \"$f\" || exit 1; done"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
