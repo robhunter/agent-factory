@@ -45,6 +45,10 @@ check "portal.config.json is valid JSON" "node -e \"JSON.parse(require('fs').rea
 check "portal.config dataDir is data" "node -e \"process.exit(JSON.parse(require('fs').readFileSync('$DEST/portal.config.json')).dataDir==='data'?0:1)\""
 check "agent name is slugified to fleethd-research" "grep -q '^name: fleethd-research$' '$DEST/agent.yaml'"
 
+# Playwright MCP ships with the template (matches the running fleet).
+check ".mcp.json is present and valid JSON" "node -e \"JSON.parse(require('fs').readFileSync('$DEST/.mcp.json'))\""
+check ".mcp.json registers playwright" "node -e \"process.exit(JSON.parse(require('fs').readFileSync('$DEST/.mcp.json')).mcpServers.playwright?0:1)\""
+
 # Two-tier layout.
 check "/data/ is gitignored in main repo" "grep -q '^/data/$' '$DEST/.gitignore'"
 check "main repo initialized" "[ -d '$DEST/.git' ]"

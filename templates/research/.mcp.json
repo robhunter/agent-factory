@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--headless", "--browser", "firefox"],
+      "env": {}
+    },
+    "playwright-headed": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest", "--browser", "firefox"],
+      "env": {}
+    }
+  }
+}
