@@ -95,7 +95,12 @@ function git(cwd, args) {
 // Commit everything currently staged/unstaged, with an identity fallback so a
 // host without global git config still succeeds (these commits are cosmetic).
 function gitInitCommit(cwd, message) {
-  git(cwd, ['init', '-q']);
+  // -b main, not a bare init. `git init` uses init.defaultBranch, which is
+  // unset on a stock host and therefore 'master' — and agent-portal's wake.sh
+  // has a branch guard that refuses to run anywhere but main. A generated agent
+  // whose first cycle aborts at the guard looks like a broken framework rather
+  // than a one-word default, so pin it here.
+  git(cwd, ['init', '-q', '-b', 'main']);
   git(cwd, ['add', '-A']);
   const idArgs = [];
   let hasName = false;
@@ -183,6 +188,14 @@ function main() {
   ];
   if (opts.dataPolicy === 'local-only') {
     baseIgnore.push('# Local-only data tier (its own git repo, never pushed)', '/data/', '');
+    // wake.sh writes logs/cycles/wake-steps.log at the REPO ROOT before it can
+    // resolve dataDir from portal.config.json, and start.sh writes
+    // logs/supervisor.log there. Both belong to the local-only tier, but they
+    // land outside data/ and so escape the /data/ rule above. Without this,
+    // every cycle commits and pushes a few lines of step log — per-cycle churn
+    // in the durable tier, which is the one thing this split exists to prevent.
+    baseIgnore.push('# Framework churn written at the repo root before dataDir resolves',
+      '/logs/', '');
   } else {
     baseIgnore.push('# Churn not worth pushing', 'logs/cycles/*.log', 'logs/supervisor.log',
       'logs/*.pid', 'pending_notification.txt', '');
