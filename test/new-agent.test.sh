@@ -60,6 +60,19 @@ check "state skeleton dirs exist under data/" "[ -d '$DEST/data/journals' ] && [
 # data/ is excluded from the main repo's tracked files.
 TRACKED_DATA="$(git -C "$DEST" ls-files data/ | wc -l | tr -d ' ')"
 check "main repo tracks zero files under data/" "[ '$TRACKED_DATA' = '0' ]"
+
+# Both tiers must be on 'main'. agent-portal's wake.sh has a branch guard that
+# aborts the cycle anywhere else, so a generated agent on 'master' is dead on
+# first wake — which is what a bare `git init` gives you on a stock host.
+check "main repo is on branch main" "[ \"\$(git -C '$DEST' branch --show-current)\" = 'main' ]"
+check "data tier is on branch main" "[ \"\$(git -C '$DEST/data' branch --show-current)\" = 'main' ]"
+
+# Root-level framework logs are local-only churn: wake.sh writes them before it
+# can resolve dataDir, so they land outside data/ and escape the /data/ rule.
+check "/logs/ is gitignored" "grep -q '^/logs/\$' '$DEST/.gitignore'"
+mkdir -p "$DEST/logs/cycles" && echo x > "$DEST/logs/cycles/wake-steps.log" && echo x > "$DEST/logs/supervisor.log"
+check "root logs/ stays untracked after a cycle writes it" \
+  "[ -z \"\$(git -C '$DEST' status --porcelain --untracked-files=all logs 2>/dev/null)\" ]"
 check "main repo tracks memory/ (pushed tier)" "[ \"\$(git -C '$DEST' ls-files memory/ | wc -l | tr -d ' ')\" != '0' ]"
 
 # Onboarding sentinel intact so first agentbox run onboards.
