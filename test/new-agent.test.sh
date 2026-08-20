@@ -22,10 +22,10 @@ for spec in "alpha 8080 0" "beta 8081 30"; do
   echo '{}' > "$FLEET/$1/portal.config.json"
 done
 
-DEST="$WORK/fleethd-research"
+DEST="$WORK/gamma-research"
 echo "=== Generating agent ==="
-node "$FACTORY_ROOT/new-agent.js" "FleetHD Research" \
-  --agents-root "$FLEET" --dir "$DEST" --repo robhunter/fleethd-research || { echo "generator failed"; exit 1; }
+node "$FACTORY_ROOT/new-agent.js" "Gamma Research" \
+  --agents-root "$FLEET" --dir "$DEST" --repo robhunter/gamma-research || { echo "generator failed"; exit 1; }
 
 echo; echo "=== Assertions ==="
 
@@ -43,7 +43,7 @@ check "no unreplaced __TOKENS__ remain" "! grep -rq '__[A-Z_]*__' '$DEST' --incl
 # Config validity.
 check "portal.config.json is valid JSON" "node -e \"JSON.parse(require('fs').readFileSync('$DEST/portal.config.json'))\""
 check "portal.config dataDir is data" "node -e \"process.exit(JSON.parse(require('fs').readFileSync('$DEST/portal.config.json')).dataDir==='data'?0:1)\""
-check "agent name is slugified to fleethd-research" "grep -q '^name: fleethd-research$' '$DEST/agent.yaml'"
+check "agent name is slugified to gamma-research" "grep -q '^name: gamma-research$' '$DEST/agent.yaml'"
 
 # Two-tier layout.
 check "/data/ is gitignored in main repo" "grep -q '^/data/$' '$DEST/.gitignore'"

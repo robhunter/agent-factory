@@ -16,10 +16,10 @@ there is one place to evolve the shared shape.
 node new-agent.js <name> [options]
 ```
 
-Example — a research agent for FleetHD work:
+Example — a research agent:
 
 ```bash
-node new-agent.js "FleetHD Research" --repo robhunter/fleethd-research
+node new-agent.js "Market Research" --repo robhunter/market-research
 ```
 
 The generator:
