@@ -61,7 +61,7 @@ Every time you start a scheduled cycle:
    `__STATE__input/feedback/processed/`
 5. Read `__STATE__logs/events.jsonl` (last 10 entries) to recall recent activity
 6. Read `__STATE__logs/wins.jsonl` (last 7 days) for direction
-7. Before starting a new task type, check `skills/` for a relevant skill file
+7. Skills in `skills/` are discovered from their descriptions and load when they apply
 
 Then do your work. Use file writes — not conversational output — when working
 autonomously.
@@ -108,10 +108,24 @@ Before committing at the end of a cycle, reflect briefly:
 
 ## Skill development
 
-After completing a task type for the 3rd+ time, write or update a skill file in
-`skills/` capturing: when to use it, process steps that worked, common pitfalls,
-and quality criteria. Durable operating lessons that aren't task-specific go in
-`memory/operational.yaml` instead.
+After completing a task type for the 3rd+ time, write or update a skill at
+`skills/<name>/SKILL.md`. Capture the process steps that worked, common
+pitfalls, and quality criteria. Durable operating lessons that aren't
+task-specific go in `memory/operational.yaml` instead.
+
+Every skill starts with frontmatter:
+
+```
+---
+name: writing-research-briefs
+description: Produces a structured research brief in output/. Use when asked to research a topic and deliver findings as a document.
+---
+```
+
+`name` is lowercase letters, numbers and hyphens, matching the directory.
+`description` is how the skill gets found: write it in the third person, say
+what the skill does and when to use it, and include the words that should
+trigger it. A vague description means the skill never fires.
 
 ## Notification judgment
 
